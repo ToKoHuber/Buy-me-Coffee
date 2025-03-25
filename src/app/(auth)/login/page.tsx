@@ -44,6 +44,7 @@ export default function Login() {
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
+    router.push("/");
     console.log(values);
   }
   // ...

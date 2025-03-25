@@ -15,7 +15,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { ChevronLeft, Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -28,7 +28,6 @@ const formSchema = z.object({
     .regex(/[a-z]/, "At least one lowercase letter")
     .regex(/\d/, "At least one number")
     .regex(/[@$!%*?&]/, "At least one special character (@$!%*?&)"),
-  confirmPassword: z.string(),
 });
 
 export function Signup() {
@@ -45,9 +44,8 @@ export function Signup() {
   // 2. Define a submit handler.
   function onSubmit(values: z.infer<typeof formSchema>) {
     router.push("/");
-    console.log("console log deer daaa");
+    console.log("console log deer daaa", values);
   }
-  // ...
 
   return (
     <Form {...form}>
