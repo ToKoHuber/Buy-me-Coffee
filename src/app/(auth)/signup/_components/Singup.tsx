@@ -15,8 +15,9 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useEffect, useState } from "react";
-import { Eye, EyeOff } from "lucide-react";
+import { ChevronLeft, Eye, EyeOff } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 const formSchema = z.object({
   email: z.string().email({ message: "Invalid email address" }),
@@ -27,12 +28,11 @@ const formSchema = z.object({
     .regex(/[a-z]/, "At least one lowercase letter")
     .regex(/\d/, "At least one number")
     .regex(/[@$!%*?&]/, "At least one special character (@$!%*?&)"),
+  confirmPassword: z.string(),
 });
 
-export function Login() {
+export function Signup() {
   const [showPassword, setShowPassword] = useState(false);
-
-  // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -41,8 +41,9 @@ export function Login() {
     },
   });
 
+  // 2. Define a submit handler.
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+    // console.log(values.email);
   }
   // ...
 
@@ -52,14 +53,19 @@ export function Login() {
         onSubmit={form.handleSubmit(onSubmit)}
         className="flex flex-col gap-6"
       >
-        <h2 className="text-[24px] font-semibold leading-8 text-[#09090B]">
-          Welcome back
-        </h2>
+        <div>
+          <h2 className="text-[24px] font-semibold leading-8 text-[#09090B]">
+            Welcome, baconpancakes1
+          </h2>
+          <h3 className="text-[14px] font-normal leading-5 text-[#71717A]">
+            Connect email and set a password
+          </h3>
+        </div>
         <FormField
           control={form.control}
           name="email"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="flex flex-col gap-6">
               <div>
                 <FormLabel>Email</FormLabel>
                 <FormDescription></FormDescription>
@@ -68,11 +74,11 @@ export function Login() {
               <FormControl>
                 <Input
                   type="email"
-                  placeholder="Enter your email address"
+                  placeholder="Enter email here"
                   {...field}
+                  className="max-w-[414px]"
                 />
               </FormControl>
-              <FormDescription></FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -81,8 +87,12 @@ export function Login() {
           control={form.control}
           name="password"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Password</FormLabel>
+            <FormItem className="flex flex-col gap-6">
+              <div>
+                <FormLabel>Password</FormLabel>
+                <FormDescription></FormDescription>
+              </div>
+
               <FormControl>
                 <Input
                   type={showPassword ? "text" : "password"}
@@ -90,7 +100,6 @@ export function Login() {
                   {...field}
                 />
               </FormControl>
-
               <FormMessage />
             </FormItem>
           )}
@@ -114,7 +123,9 @@ export function Login() {
             </div>
           )}
         </button>
-        <Button type="submit">Continue</Button>
+        <Button type="submit" className="w-full">
+          Continue
+        </Button>
       </form>
     </Form>
   );

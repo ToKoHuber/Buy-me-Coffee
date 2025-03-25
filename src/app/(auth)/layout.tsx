@@ -7,8 +7,8 @@ export default function RootLayout({
 }>) {
   return (
     <div className="w-[100vw] h-[100vh] flex bg-[#FFFFFF]">
-      {children}
       <SideWithPicture />
+      {children}
     </div>
   );
 }
