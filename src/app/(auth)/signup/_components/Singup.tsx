@@ -32,6 +32,7 @@ const formSchema = z.object({
 });
 
 export function Signup() {
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -43,7 +44,8 @@ export function Signup() {
 
   // 2. Define a submit handler.
   function onSubmit(values: z.infer<typeof formSchema>) {
-    // console.log(values.email);
+    router.push("/");
+    console.log("console log deer daaa");
   }
   // ...
 

@@ -17,6 +17,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { useEffect, useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   email: z.string().email({ message: "Invalid email address" }),
@@ -29,7 +30,8 @@ const formSchema = z.object({
     .regex(/[@$!%*?&]/, "At least one special character (@$!%*?&)"),
 });
 
-export function Login() {
+export default function Login() {
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
 
   // 1. Define your form.
@@ -47,75 +49,83 @@ export function Login() {
   // ...
 
   return (
-    <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="flex flex-col gap-6"
+    <div className="w-[50%] v-[100vh] flex justify-center items-center relative">
+      <Button
+        className="absolute top-[32px] right-[108px]"
+        onClick={() => router.push("/signup")}
       >
-        <h2 className="text-[24px] font-semibold leading-8 text-[#09090B]">
-          Welcome back
-        </h2>
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <div>
-                <FormLabel>Email</FormLabel>
-                <FormDescription></FormDescription>
-              </div>
-
-              <FormControl>
-                <Input
-                  type="email"
-                  placeholder="Enter your email address"
-                  {...field}
-                />
-              </FormControl>
-              <FormDescription></FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="password"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Password</FormLabel>
-              <FormControl>
-                <Input
-                  type={showPassword ? "text" : "password"}
-                  placeholder="Enter your password"
-                  {...field}
-                />
-              </FormControl>
-
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <button
-          type="button"
-          className=" text-gray-500"
-          onClick={() => {
-            setShowPassword((prev) => !prev);
-          }}
+        Sign up
+      </Button>
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="flex flex-col gap-6"
         >
-          {showPassword ? (
-            <div className="flex gap-2 items-center">
-              <EyeOff size={16} />
-              <p> Hide password</p>
-            </div>
-          ) : (
-            <div className="flex gap-2 items-center">
-              <Eye size={16} />
-              <p>Show Password</p>
-            </div>
-          )}
-        </button>
-        <Button type="submit">Continue</Button>
-      </form>
-    </Form>
+          <h2 className="text-[24px] font-semibold leading-8 text-[#09090B]">
+            Welcome back
+          </h2>
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <div>
+                  <FormLabel>Email</FormLabel>
+                  <FormDescription></FormDescription>
+                </div>
+
+                <FormControl>
+                  <Input
+                    type="email"
+                    placeholder="Enter your email address"
+                    {...field}
+                  />
+                </FormControl>
+                <FormDescription></FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="password"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Password</FormLabel>
+                <FormControl>
+                  <Input
+                    type={showPassword ? "text" : "password"}
+                    placeholder="Enter your password"
+                    {...field}
+                  />
+                </FormControl>
+
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <button
+            type="button"
+            className=" text-gray-500"
+            onClick={() => {
+              setShowPassword((prev) => !prev);
+            }}
+          >
+            {showPassword ? (
+              <div className="flex gap-2 items-center">
+                <EyeOff size={16} />
+                <p> Hide password</p>
+              </div>
+            ) : (
+              <div className="flex gap-2 items-center">
+                <Eye size={16} />
+                <p>Show Password</p>
+              </div>
+            )}
+          </button>
+          <Button type="submit">Continue</Button>
+        </form>
+      </Form>
+    </div>
   );
 }

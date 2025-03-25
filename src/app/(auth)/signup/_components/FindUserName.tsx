@@ -23,7 +23,7 @@ const formSchema = z.object({
   }),
 });
 
-export function FindUserName() {
+export function FindUserName({ onClick }) {
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -36,7 +36,7 @@ export function FindUserName() {
   function onSubmit(values: z.infer<typeof formSchema>) {
     // console.log(values.email);
     // setEmail(values.email);
-    // onClick();
+    onClick();
   }
   // ...
 
