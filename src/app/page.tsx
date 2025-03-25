@@ -1,6 +1,8 @@
 "use client";
 import { BankCardType, DonationType, ProfileType, UserType } from "@/util/type";
 import { useEffect, useState } from "react";
+import { Header } from "./_components/header/Header";
+import { Navigation } from "./_components/Navigation";
 
 export default function Home() {
   const [profiles, setProfile] = useState<ProfileType[] | null>(null);
@@ -25,5 +27,9 @@ export default function Home() {
   console.log("Printing user data", users);
   console.log("Printing donation data", donaitons);
   console.log("Printing bankCards data", bankCards);
-  return <div className="flex"></div>;
+  return (
+    <div>
+      <Navigation />
+    </div>
+  );
 }
