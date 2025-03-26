@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 
 export function Profile() {
   return (
-    <div className="flex flex-col gap-3 w-[100%]">
+    <div className="flex flex-col gap-3 w-[100%] p-6 rounded-[8px] border-[1px]">
       <div className="flex justify-between">
         <div className="flex gap-3">
           <Avatar>

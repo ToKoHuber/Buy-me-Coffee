@@ -3,6 +3,7 @@ import { BankCardType, DonationType, ProfileType, UserType } from "@/util/type";
 import { useEffect, useState } from "react";
 import { Header } from "./_components/header/Header";
 import { Navigation } from "./_components/Navigation";
+import { CreateProfile } from "./(createProfile)/page";
 
 export default function Home() {
   const [profiles, setProfile] = useState<ProfileType[] | null>(null);
@@ -29,7 +30,8 @@ export default function Home() {
   console.log("Printing bankCards data", bankCards);
   return (
     <div>
-      <Navigation />
+      {/* <Navigation /> */}
+      <CreateProfile />
     </div>
   );
 }
