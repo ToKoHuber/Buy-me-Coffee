@@ -73,7 +73,7 @@ const formSchema = z.object({
     }),
 });
 
-export function ProfileInfo() {
+export function ProfileInfo({ onClick }) {
   const [foods, setFoods] = useState([]);
   const [foodImageFile, setFoodImageFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string>();
@@ -97,6 +97,8 @@ export function ProfileInfo() {
   };
 
   function onSubmit(values: z.infer<typeof formSchema>) {
+    onClick();
+    console.log("values", values);
     // createFood(values);
   }
   // const filteredDishesCategoryId = filteredDishes[0].category._id;
@@ -199,7 +201,10 @@ export function ProfileInfo() {
               <FormItem>
                 <FormLabel>About</FormLabel>
                 <FormControl>
-                  <Input placeholder="Write about yourself here" {...field} />
+                  <Textarea
+                    placeholder="Write about yourself here"
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -212,7 +217,7 @@ export function ProfileInfo() {
               <FormItem>
                 <FormLabel>Social media URL</FormLabel>
                 <FormControl>
-                  <Textarea
+                  <Input
                     placeholder="https://"
                     className="resize-none"
                     {...field}
@@ -224,7 +229,9 @@ export function ProfileInfo() {
           />
         </div>
 
-        <Button type="submit">Submit</Button>
+        <Button type="submit" variant="secondary">
+          Continue
+        </Button>
       </form>
     </Form>
   );

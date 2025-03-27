@@ -3,7 +3,7 @@ import { BankCardType, DonationType, ProfileType, UserType } from "@/util/type";
 import { useEffect, useState } from "react";
 import { Header } from "./_components/header/Header";
 import { Navigation } from "./_components/Navigation";
-import { CreateProfile } from "./(createProfile)/page";
+import { CreateProfile } from "./create-profile/page";
 
 export default function Home() {
   const [profiles, setProfile] = useState<ProfileType[] | null>(null);
@@ -24,14 +24,14 @@ export default function Home() {
       .then((data) => data.json())
       .then((json) => setBankCards(json.data));
   }, []);
-  console.log("Printing profile data", profiles);
-  console.log("Printing user data", users);
-  console.log("Printing donation data", donaitons);
-  console.log("Printing bankCards data", bankCards);
+  // console.log("Printing profile data", profiles);
+  // console.log("Printing user data", users);
+  // console.log("Printing donation data", donaitons);
+  // console.log("Printing bankCards data", bankCards);
   return (
     <div>
       {/* <Navigation /> */}
-      <CreateProfile />
+      {/* <CreateProfile /> */}
     </div>
   );
 }

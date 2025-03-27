@@ -8,7 +8,7 @@ export default function RootLayout({
 }>) {
   return (
     <div className="flex flex-col w-[100vw] items-center">
-      <div>
+      <div className="flex flex-col gap-[44px]">
         <Header />
         <div className="max-w-[1440px] flex px-4 py-2 justify-between">
           <Navigation />

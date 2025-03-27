@@ -15,17 +15,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+
 import { Textarea } from "@/components/ui/textarea";
-import { Camera, Image } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -35,10 +26,8 @@ import {
 } from "@/components/ui/select";
 import { months } from "@/lib/monthData";
 import { years } from "@/lib/yearData";
-
-// let data = await fetch("https://api.first.org/data/v1/countries");
-// let countries = await data.json();
-// console.log("printing country data", countries);
+import { CountryDropdown } from "./CountryDropdown";
+import { useRouter } from "next/navigation";
 
 // const UPLOAD_PRESET = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET!;
 // const CLOUD_NAME = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
@@ -72,37 +61,29 @@ const uploadImage = async (file: File | null) => {
 };
 
 const formSchema = z.object({
-  Name: z.string().min(2, "Hamgiin bagadaa 2 usegtei baina shuu"),
+  country: z.string().nonempty("Select a coutnry"),
   FirstName: z.string().min(2, "Hamgiin bagadaa 2 usegtei baina shuu"),
   LastName: z.string().min(2, "Hamgiin bagadaa 2 usegtei baina shuu"),
   CardNumber: z.string().min(2, "Hamgiin bagadaa 2 usegtei baina shuu"),
-  Expires: z.string().min(2, "Hamgiin bagadaa 2 usegtei baina shuu"),
-  Year: z.string().min(2, "Hamgiin bagadaa 2 usegtei baina shuu"),
-  CVC: z.string().min(2, "Hamgiin bagadaa 2 usegtei baina shuu"),
-  // About: z.number(),
-  image: z.string().nonempty("Zuragaa oruulna uu"),
-  SocialmediaURL: z
+  Expires: z.string().nonempty("Please select a month"),
+  Year: z.string().nonempty("Please select a year"),
+  CVC: z
     .string()
-    .min(10, {
-      message: "SocialmediaURL must be at least 10 characters.",
-    })
-    .max(160, {
-      message: "SocialmediaURL must not be longer than 160 characters.",
-    }),
+    .length(3, "CVC must be exactly 3 digits")
+    .regex(/^\d+$/, "CVC must contain only numbers"),
 });
 
-export function PaymentInfo() {
+export function PaymentInfo({ onClick }) {
   const [foods, setFoods] = useState([]);
   const [foodImageFile, setFoodImageFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string>();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      Name: "",
+      country: "",
       FirstName: "",
       LastName: "",
       CardNumber: "",
-      image: "",
       Expires: "",
       Year: "",
       CVC: "",
@@ -110,24 +91,7 @@ export function PaymentInfo() {
   });
 
   const [data, setData] = useState<any>(null);
-
-  // Use effect to fetch data asynchronously
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(
-          "https://restcountries.com/v3.1/all?fields=name"
-        );
-        const result = await response.json();
-        setData(result);
-        console.log("Printing data of countries", result);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    fetchData(); // Call the async function inside the useEffect
-  }, []); //
+  const router = useRouter();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files![0];
@@ -140,6 +104,8 @@ export function PaymentInfo() {
   };
 
   function onSubmit(values: z.infer<typeof formSchema>) {
+    router.push("/home");
+    console.log("values", values);
     // createFood(values);
   }
   // const filteredDishesCategoryId = filteredDishes[0].category._id;
@@ -193,30 +159,17 @@ export function PaymentInfo() {
         <div className="flex flex-col gap-6">
           <FormField
             control={form.control}
-            name="Name"
+            name="country"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Select country</FormLabel>
-                <FormControl>
-                  <Select>
-                    <SelectTrigger className="w-[180px]">
-                      <SelectValue placeholder="Select" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {data.map((country) => {
-                        return (
-                          <SelectItem
-                            value={country.name.common}
-                            key={country.name.common}
-                          >
-                            {country.name.common}
-                          </SelectItem>
-                        );
-                      })}
-                    </SelectContent>
-                  </Select>
-                  {/* <Input placeholder="Enter your name here" {...field} /> */}
-                </FormControl>
+                <CountryDropdown
+                  placeholder="Country"
+                  defaultValue={field.value}
+                  onChange={(country) => {
+                    field.onChange(country.alpha3);
+                  }}
+                />
                 <FormMessage />
               </FormItem>
             )}
@@ -226,7 +179,7 @@ export function PaymentInfo() {
               control={form.control}
               name="FirstName"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="w-[50%]">
                   <FormLabel>First name</FormLabel>
                   <FormControl>
                     <Input placeholder="Enter your name here" {...field} />
@@ -239,7 +192,7 @@ export function PaymentInfo() {
               control={form.control}
               name="LastName"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="w-[50%]">
                   <FormLabel>Last name</FormLabel>
                   <FormControl>
                     <Input placeholder="Enter your name here" {...field} />
@@ -275,13 +228,20 @@ export function PaymentInfo() {
                 <FormItem className="w-[100%]">
                   <FormLabel>Expires</FormLabel>
                   <FormControl>
-                    <Select>
+                    <Select
+                      onValueChange={(value) => field.onChange(value)}
+                      value={field.value}
+                    >
                       <SelectTrigger className="w-[159px]">
                         <SelectValue placeholder="Month" />
                       </SelectTrigger>
                       <SelectContent>
-                        {months.map((month) => {
-                          return <SelectItem value="month">{month}</SelectItem>;
+                        {months.map((month, index) => {
+                          return (
+                            <SelectItem key={index} value={month}>
+                              {month}
+                            </SelectItem>
+                          );
                         })}
                       </SelectContent>
                     </Select>
@@ -289,7 +249,7 @@ export function PaymentInfo() {
                   <FormMessage />
                 </FormItem>
               )}
-            />{" "}
+            />
             <FormField
               control={form.control}
               name="Year"
@@ -297,13 +257,20 @@ export function PaymentInfo() {
                 <FormItem className="w-[100%]">
                   <FormLabel>Year</FormLabel>
                   <FormControl>
-                    <Select {...field}>
+                    <Select
+                      onValueChange={(value) => field.onChange(value)}
+                      value={field.value}
+                    >
                       <SelectTrigger className="w-[159px]">
                         <SelectValue placeholder="Year" />
                       </SelectTrigger>
                       <SelectContent>
                         {years.map((year) => {
-                          return <SelectItem value={year}>{year}</SelectItem>;
+                          return (
+                            <SelectItem key={year} value={year.toString()}>
+                              {year}
+                            </SelectItem>
+                          );
                         })}
                       </SelectContent>
                     </Select>
@@ -311,7 +278,7 @@ export function PaymentInfo() {
                   <FormMessage />
                 </FormItem>
               )}
-            />{" "}
+            />
             <FormField
               control={form.control}
               name="CVC"
@@ -332,7 +299,9 @@ export function PaymentInfo() {
           </div>
         </div>
 
-        <Button type="submit">Submit</Button>
+        <Button type="submit" className="mt-6" variant="secondary">
+          Continue
+        </Button>
       </form>
     </Form>
   );

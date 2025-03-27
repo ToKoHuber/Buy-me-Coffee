@@ -3,7 +3,7 @@ import { ChevronDown } from "lucide-react";
 
 export function TransactionsHeader() {
   return (
-    <div className="w-[100%] flex justify-between items-center">
+    <div className="w-[100%] flex justify-between">
       <h2 className="text-[16px] font-semibold leading-6">
         Recent Transaction
       </h2>
