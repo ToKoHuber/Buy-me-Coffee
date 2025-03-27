@@ -1,9 +1,7 @@
 "use client";
 import { BankCardType, DonationType, ProfileType, UserType } from "@/util/type";
 import { useEffect, useState } from "react";
-import { Header } from "./_components/header/Header";
-import { Navigation } from "./_components/Navigation";
-import { CreateProfile } from "./create-profile/page";
+import { set } from "react-hook-form";
 
 export default function Home() {
   const [profiles, setProfile] = useState<ProfileType[] | null>(null);
@@ -29,7 +27,25 @@ export default function Home() {
   }, []);
   // console.log("Printing profile data", profiles);
   // console.log("Printing user data", users);
-  // console.log("Printing donation data", donaitons);
+  console.log("Printing donation data", donaitons);
+  const user = users?.[0];
+  console.log("Printing user data", user);
+  console.log("Printing user id", user?.id);
+  const [totalDonation, setTotalDonation] = useState<number>(0);
+  function getDonationTotal() {
+    setTotalDonation(0);
+    donaitons?.map((donation) => {
+      if (donation.recipientId === user?.id) {
+        setTotalDonation((prevTotal) => prevTotal + donation.amount);
+      }
+    });
+  }
+  useEffect(() => {
+    getDonationTotal();
+  }, [donaitons, user?.id]);
+
+  console.log("Printing total", totalDonation);
+
   // console.log("Printing bankCards data", bankCards);
   return (
     <div>
