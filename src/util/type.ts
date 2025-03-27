@@ -45,3 +45,39 @@ export type DonationType = {
   createdAt: Date; // The date when the donation was made
   updatedAt: Date; // The date when the donation record was last updated
 };
+
+export type UserDataType = {
+  email: string;
+  password: string;
+  username: string;
+  createdAt: Date;
+  updatedAt: Date;
+  profile: {
+    name: string;
+    about: string;
+    avatarImage: string;
+    socialMediaURL: string;
+    backgroundImage: string;
+    successMessage: string;
+    createdAt: Date;
+    updatedAt: Date;
+  };
+  bankCard: {
+    country: string;
+    firstName: string;
+    lastName: string;
+    cardNumber: string;
+    expiryDate: Date;
+    createdAt: Date;
+    updatedAt: Date;
+  };
+  receivedDonations: {
+    amount: number;
+    specialMessage: string;
+    socialURLOrBuyMeACoffee: string;
+    donorId: number;
+    recipientId: number;
+    createdAt: Date;
+    updatedAt: Date;
+  };
+};

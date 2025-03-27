@@ -23,6 +23,9 @@ export default function Home() {
     fetch("api/bank-card")
       .then((data) => data.json())
       .then((json) => setBankCards(json.data));
+    // fetch("api/bank-card")
+    //   .then((data) => data.json())
+    //   .then((json) => setBankCards(json.data));
   }, []);
   // console.log("Printing profile data", profiles);
   // console.log("Printing user data", users);

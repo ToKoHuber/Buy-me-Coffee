@@ -59,18 +59,11 @@ const uploadImage = async (file: File | null) => {
 };
 
 const formSchema = z.object({
-  Name: z.string().min(2, "Hamgiin bagadaa 2 usegtei baina shuu"),
-  About: z.string().min(2, "Hamgiin bagadaa 2 usegtei baina shuu"),
+  Name: z.string().nonempty("Please enter name"),
+  About: z.string().nonempty("Please enter info about yourself"),
   // About: z.number(),
-  image: z.string().nonempty("Zuragaa oruulna uu"),
-  SocialmediaURL: z
-    .string()
-    .min(10, {
-      message: "SocialmediaURL must be at least 10 characters.",
-    })
-    .max(160, {
-      message: "SocialmediaURL must not be longer than 160 characters.",
-    }),
+  image: z.string().nonempty("Please enter image"),
+  SocialmediaURL: z.string().nonempty("Please enter a social link"),
 });
 
 export function ProfileInfo({ onClick }) {

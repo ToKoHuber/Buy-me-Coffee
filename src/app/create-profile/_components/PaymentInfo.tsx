@@ -61,12 +61,12 @@ const uploadImage = async (file: File | null) => {
 };
 
 const formSchema = z.object({
-  country: z.string().nonempty("Select a coutnry"),
-  FirstName: z.string().min(2, "Hamgiin bagadaa 2 usegtei baina shuu"),
-  LastName: z.string().min(2, "Hamgiin bagadaa 2 usegtei baina shuu"),
-  CardNumber: z.string().min(2, "Hamgiin bagadaa 2 usegtei baina shuu"),
-  Expires: z.string().nonempty("Please select a month"),
-  Year: z.string().nonempty("Please select a year"),
+  country: z.string().nonempty("Select coutnry to continue"),
+  FirstName: z.string().nonempty("First name must match"),
+  LastName: z.string().nonempty("Last name must match"),
+  CardNumber: z.string().nonempty("Invalide card number"),
+  Expires: z.string().nonempty("Invalide month"),
+  Year: z.string().nonempty("Invalid year"),
   CVC: z
     .string()
     .length(3, "CVC must be exactly 3 digits")
@@ -74,9 +74,6 @@ const formSchema = z.object({
 });
 
 export function PaymentInfo({ onClick }) {
-  const [foods, setFoods] = useState([]);
-  const [foodImageFile, setFoodImageFile] = useState<File | null>(null);
-  const [previewUrl, setPreviewUrl] = useState<string>();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -90,58 +87,12 @@ export function PaymentInfo({ onClick }) {
     },
   });
 
-  const [data, setData] = useState<any>(null);
   const router = useRouter();
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files![0];
-
-    setFoodImageFile(file);
-
-    const tempImageUrl = URL.createObjectURL(file);
-    setPreviewUrl(tempImageUrl);
-    form.setValue("image", "uploaded");
-  };
-
   function onSubmit(values: z.infer<typeof formSchema>) {
     router.push("/home");
     console.log("values", values);
     // createFood(values);
   }
-  // const filteredDishesCategoryId = filteredDishes[0].category._id;
-
-  //   const getFoods = async () => {
-  //     const data = await fetch("http://localhost:4000/food");
-  //     // console.log("data printing", data);
-  //     const jsonData = await data.json();
-  //     setFoods(jsonData.getFoods || []);
-  //     console.log("jsonData printing", jsonData);
-  //   };
-  //   useEffect(() => {
-  //     getFoods();
-  //   }, []);
-
-  //   const createFood = async (values: z.infer<typeof formSchema>) => {
-  //     const imageUrl = await uploadImage(foodImageFile);
-
-  //     const data = await fetch("http://localhost:4000/food", {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({
-  //         Name: values.Name,
-  //         price: values.About,
-  //         image: imageUrl,
-  //         SocialmediaURL: values.SocialmediaURL,
-  //         category: `${category._id}`,
-  //       }),
-  //     });
-  //     const jsonData = await data.json();
-
-  //     console.log("data", jsonData);
-  //     getFoods();
-  //   };
 
   return (
     <Form {...form}>
