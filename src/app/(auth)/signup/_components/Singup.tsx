@@ -30,7 +30,9 @@ const formSchema = z.object({
     .regex(/[@$!%*?&]/, "At least one special character (@$!%*?&)"),
 });
 
-export function Signup() {
+export function Signup({ userName }) {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
@@ -41,10 +43,43 @@ export function Signup() {
     },
   });
 
+  const handleSubmit = async (values) => {
+    try {
+      const response = await fetch("/api/user", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(values),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) throw new Error(data.message || "Submission failed");
+
+      return { success: true, message: "User registered successfully" };
+    } catch (error) {
+      return { success: false, message: error.message };
+    }
+  };
+
   // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    router.push("/");
-    console.log("console log deer daaa", values);
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    try {
+      setEmail(values.email);
+      setPassword(values.password);
+
+      const response = await handleSubmit(values); // Wait for the form submission to complete
+
+      if (response?.success) {
+        console.log("Form submitted successfully:", values);
+        router.push("/home"); // Navigate only if submission succeeds
+      } else {
+        console.error("Submission failed:", response?.message);
+        alert(response?.message || "Form submission failed. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      alert("An error occurred. Please try again.");
+    }
   }
 
   return (
@@ -55,7 +90,7 @@ export function Signup() {
       >
         <div>
           <h2 className="text-[24px] font-semibold leading-8 text-[#09090B]">
-            Welcome, baconpancakes1
+            Welcome, {userName}
           </h2>
           <h3 className="text-[14px] font-normal leading-5 text-[#71717A]">
             Connect email and set a password

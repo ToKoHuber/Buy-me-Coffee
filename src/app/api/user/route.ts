@@ -1,7 +1,5 @@
 import { runQuery } from "@/util/queryService";
 import { NextResponse } from "next/server";
-import { getClient } from "../../../util/db";
-import { number } from "zod";
 import bcrypt from "bcrypt";
 
 export async function GET(): Promise<NextResponse> {
@@ -58,19 +56,12 @@ export async function POST(request: Request): Promise<NextResponse> {
     // Insert the new user into the database with parameterized query
     const query = `
     INSERT INTO "public"."User" 
-    ("email", "password", "username", "receivedDonations", "profile", "bankCard") 
-    VALUES ($1, $2, $3, $4, $5, $6) 
+    ("email", "password", "username") 
+    VALUES ($1, $2, $3) 
     RETURNING *;
     `;
     const hashedPassword = await bcrypt.hash(password, 10);
-    const values = [
-      email,
-      hashedPassword,
-      username,
-      receivedDonations || 0,
-      profile || 0,
-      bankCard || 0,
-    ];
+    const values = [email, hashedPassword, username];
 
     const user = await runQuery(query, values);
 
