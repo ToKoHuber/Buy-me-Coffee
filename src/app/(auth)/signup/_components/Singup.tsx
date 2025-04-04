@@ -30,7 +30,7 @@ const formSchema = z.object({
     .regex(/[@$!%*?&]/, "At least one special character (@$!%*?&)"),
 });
 
-export function Signup({ userName }) {
+export function Signup({ userName }: { userName: string }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
@@ -43,12 +43,12 @@ export function Signup({ userName }) {
     },
   });
 
-  const handleSubmit = async (values) => {
+  const handleSubmit = async (values: { email: string; password: string }) => {
     try {
       const response = await fetch("/api/user", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(values),
+        body: JSON.stringify({ ...values, username: userName }),
       });
 
       const data = await response.json();
@@ -57,21 +57,21 @@ export function Signup({ userName }) {
 
       return { success: true, message: "User registered successfully" };
     } catch (error) {
-      return { success: false, message: error.message };
+      return { success: false, message: "aldaa garlaa" };
     }
   };
 
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      setEmail(values.email);
-      setPassword(values.password);
-
       const response = await handleSubmit(values); // Wait for the form submission to complete
 
       if (response?.success) {
         console.log("Form submitted successfully:", values);
-        router.push("/home"); // Navigate only if submission succeeds
+        localStorage.setItem("email", values.email);
+        localStorage.setItem("password", values.password);
+        localStorage.setItem("username", userName);
+        router.push("/create-profile"); // Navigate only if submission succeeds
       } else {
         console.error("Submission failed:", response?.message);
         alert(response?.message || "Form submission failed. Please try again.");

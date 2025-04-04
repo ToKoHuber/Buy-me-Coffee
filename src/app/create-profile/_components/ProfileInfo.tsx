@@ -73,7 +73,7 @@ const formSchema = z.object({
     }),
 });
 
-export function ProfileInfo({ onClick }) {
+export function ProfileInfo({ onClick }: { onClick: () => void }) {
   const [foods, setFoods] = useState([]);
   const [foodImageFile, setFoodImageFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string>();

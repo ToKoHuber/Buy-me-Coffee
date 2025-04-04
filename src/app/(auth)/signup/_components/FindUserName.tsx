@@ -23,7 +23,15 @@ const formSchema = z.object({
   }),
 });
 
-export function FindUserName({ onClick, userData, setUserName }) {
+export function FindUserName({
+  onClick,
+  userData,
+  setUserName,
+}: {
+  onClick: () => void;
+  userData: any;
+  setUserName: (username: string) => void;
+}) {
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -34,12 +42,15 @@ export function FindUserName({ onClick, userData, setUserName }) {
 
   // 2. Define a submit handler.
   function onSubmit(values: z.infer<typeof formSchema>) {
-    if (values.username === userData?.username) {
+    const foundUser = userData.find(
+      (user: any) => user.username === values.username
+    );
+    console.log("foundUser", foundUser);
+    if (foundUser) {
       alert("Username already taken");
       return;
     } else {
       setUserName(values.username);
-      console.log("values.username", values.username);
       onClick();
     }
     // console.log(values.email);

@@ -19,7 +19,8 @@ export default function SignUp() {
         const response = await fetch("/api/user");
         if (response.ok) {
           const data = await response.json();
-          setUserData(data); // Store data in state
+          console.log("data", data);
+          setUserData(data.users); // Store data in state
         } else {
           console.error("Failed to fetch data");
         }
@@ -30,7 +31,6 @@ export default function SignUp() {
 
     fetchData();
   }, []);
-  console.log("userData", userData);
 
   return (
     <div className="w-[50%] v-[100vh] flex justify-center items-center relative">
@@ -47,9 +47,9 @@ export default function SignUp() {
         onClick={() => {
           setCurrentStep(currentStep + 1);
         }}
-        goBack={() => {
-          setCurrentStep(currentStep - 1);
-        }}
+        // goBack={() => {
+        //   setCurrentStep(currentStep - 1);
+        // }}
       />
     </div>
   );
