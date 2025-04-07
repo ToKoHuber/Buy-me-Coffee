@@ -15,15 +15,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { Camera, Image } from "lucide-react";
 
@@ -74,8 +65,7 @@ const formSchema = z.object({
 });
 
 export function ProfileInfo({ onClick }: { onClick: () => void }) {
-  const [foods, setFoods] = useState([]);
-  const [foodImageFile, setFoodImageFile] = useState<File | null>(null);
+  const [ProfileImageFile, setProfileImageFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string>();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -89,7 +79,7 @@ export function ProfileInfo({ onClick }: { onClick: () => void }) {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files![0];
 
-    setFoodImageFile(file);
+    setProfileImageFile(file);
 
     const tempImageUrl = URL.createObjectURL(file);
     setPreviewUrl(tempImageUrl);
@@ -99,42 +89,28 @@ export function ProfileInfo({ onClick }: { onClick: () => void }) {
   function onSubmit(values: z.infer<typeof formSchema>) {
     onClick();
     console.log("values", values);
-    // createFood(values);
+    createProfile(values);
   }
-  // const filteredDishesCategoryId = filteredDishes[0].category._id;
 
-  //   const getFoods = async () => {
-  //     const data = await fetch("http://localhost:4000/food");
-  //     // console.log("data printing", data);
-  //     const jsonData = await data.json();
-  //     setFoods(jsonData.getFoods || []);
-  //     console.log("jsonData printing", jsonData);
-  //   };
-  //   useEffect(() => {
-  //     getFoods();
-  //   }, []);
+  const createProfile = async (values: z.infer<typeof formSchema>) => {
+    const imageUrl = await uploadImage(ProfileImageFile);
 
-  //   const createFood = async (values: z.infer<typeof formSchema>) => {
-  //     const imageUrl = await uploadImage(foodImageFile);
+    const data = await fetch("api/profile", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        avatarImage: imageUrl,
+        Name: values.Name,
+        about: values.About,
+        socialMediaURL: values.SocialmediaURL,
+      }),
+    });
+    const jsonData = await data.json();
 
-  //     const data = await fetch("http://localhost:4000/food", {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({
-  //         Name: values.Name,
-  //         price: values.About,
-  //         image: imageUrl,
-  //         SocialmediaURL: values.SocialmediaURL,
-  //         category: `${category._id}`,
-  //       }),
-  //     });
-  //     const jsonData = await data.json();
-
-  //     console.log("data", jsonData);
-  //     getFoods();
-  //   };
+    console.log("data", jsonData);
+  };
 
   return (
     <Form {...form}>
