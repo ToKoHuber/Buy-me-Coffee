@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react";
-import { Sidebar } from "./dashboard/user/[userId]/_components/Sidebar";
+import { Sidebar } from "./dashboards/user/[userId]/_components/Sidebar";
 
 type Props = {
   children: ReactNode;

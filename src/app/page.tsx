@@ -2,8 +2,8 @@
 import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useUser } from "./_context/UserContext";
-import { EarningsProfile } from "./(home)/dashboard/user/[userId]/_components/EarningsProfile";
-import { TransactionsProfile } from "./(home)/dashboard/user/[userId]/_components/TransactionsProfile";
+import { EarningsProfile } from "./(home)/dashboards/user/[userId]/_components/EarningsProfile";
+import { TransactionsProfile } from "./(home)/dashboards/user/[userId]/_components/TransactionsProfile";
 
 const Home = () => {
   const { loggedUser } = useUser();
